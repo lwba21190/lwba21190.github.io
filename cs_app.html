@@ -5,7 +5,7 @@
     <title>CS_APP</title>
 	<script type="text/javascript" src="hbbtv-app-lib.js"></script>
 </head>
-<body style="height:96%" >
+<body style="height:96%" bgcolor="#6495ed">
     <h1>CS Web Application Test</h1>
     <div style="float:left;width:48%">
         <button id="button">Discover HbbTV Terminals</button>
@@ -28,7 +28,7 @@
             a.href = url;
             return a.href;
         }
-		log("1111111111");
+
         var launchHbbTVApp = function(index){
             var terminal = terminals[index];
             var options = {
@@ -39,7 +39,7 @@
                 log("launch app result code "+ res);
             });
         };
-log("222222222222");
+
         var connect = function(index,url){
             var ws = new WebSocket(url);
             ws.binary = "arraybuffer";
@@ -67,9 +67,8 @@ log("222222222222");
             };
 
         }
-log("3333333333333333");
+
         var terminalManager = hbbtv && hbbtv.createTerminalManager();
-		log("44444444444444");
         var terminals = [];
 
      //   document.getElementById("button").onclick = function(){
