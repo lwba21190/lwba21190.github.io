@@ -60,12 +60,14 @@
         if(!req.id){
             req.id = rpcCounter++;
         }
+		document.getElementById("log").innerHTML += ("send req1" + "\n");
         if(callback && ws){
             pendingRpcRequests[req.id] = {
                 req:req,
                 callback:callback
             };
             ws.send(JSON.stringify(req));
+			document.getElementById("log").innerHTML += ("send req2" + "\n");
             return true;
         }
         return false;
@@ -74,13 +76,16 @@
     var handleRpcResponse = function(rsp){
         var id = rsp.id;
         var pendingRpc = pendingRpcRequests[id];
+		document.getElementById("log").innerHTML += ("handle res1" + "\n");
         if(pendingRpc){
             if(pendingRpc.callback){
                 try{
+					document.getElementById("log").innerHTML += ("handle res2" + "\n");
                     var req = pendingRpc.req || null;
                     pendingRpc.callback.call(req,rsp);
                 }
                 catch(err){
+					document.getElementById("log").innerHTML += ("handle res3" + "\n");
                     console.error("handle info error");
                 }
             }
@@ -147,9 +152,11 @@
             method: "discoverTerminals",
             params: []
         }, function (rsp) {
+			document.getElementById("log").innerHTML += ("discover 1" + "\n");
             var terminals = rsp.result;
             var res = [];
             for(var appUrl in terminals){
+				document.getElementById("log").innerHTML += ("discover 2" + "\n");
                 var oldTerminal = discoveredTerminals[appUrl];
                 var terminal = terminals[appUrl];
                 terminal.id = appUrl;
@@ -159,6 +166,7 @@
                 discoveredTerminals[enumId] = terminal;
                 res.push(newTerminal);
             }
+			document.getElementById("log").innerHTML += ("discover 3" + "\n");
             onTerminalDiscovery && onTerminalDiscovery.call(null,res);
         });
     };
