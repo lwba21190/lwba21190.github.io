@@ -66,8 +66,9 @@
                 req:req,
                 callback:callback
             };
-            ws.send(JSON.stringify(req));
 			document.getElementById("log").innerHTML += ("send req2" + "\n");
+            ws.send(JSON.stringify(req));
+			document.getElementById("log").innerHTML += ("send req3" + "\n");
             return true;
         }
         return false;
