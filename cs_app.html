@@ -12,7 +12,7 @@
 	</script>
 
 </head>
-<body style="height:96%" bgcolor="#6495ed">
+<body style="height:96%" >
     <h1>CS Web Application Test</h1>
     <div style="float:left;width:48%">
         <button id="button">Discover HbbTV Terminals</button>
@@ -76,11 +76,12 @@ log("222222222222");
         }
 log("3333333333333333");
         var terminalManager = hbbtv && hbbtv.createTerminalManager();
+		log("44444444444444");
         var terminals = [];
 
      //   document.getElementById("button").onclick = function(){
             document.getElementById("info").innerHTML = "Searching for HbbTV Terminals:  please wait ...";
-			log("44444444444444");
+			
             terminals.length = 0;
             document.getElementById("button").setAttribute("disabled","true");
 			log("5555555555555555");
