@@ -29,7 +29,7 @@
             a.href = url;
             return a.href;
         }
-
+		log("1111111111");
         var launchHbbTVApp = function(index){
             var terminal = terminals[index];
             var options = {
@@ -40,7 +40,7 @@
                 log("launch app result code "+ res);
             });
         };
-
+log("222222222222");
         var connect = function(index,url){
             var ws = new WebSocket(url);
             ws.binary = "arraybuffer";
@@ -68,18 +68,22 @@
             };
 
         }
-
+log("3333333333333333");
         var terminalManager = hbbtv && hbbtv.createTerminalManager();
         var terminals = [];
 
      //   document.getElementById("button").onclick = function(){
             document.getElementById("info").innerHTML = "Searching for HbbTV Terminals:  please wait ...";
+			log("44444444444444");
             terminals.length = 0;
             document.getElementById("button").setAttribute("disabled","true");
+			log("5555555555555555");
             terminalManager.discoverTerminals(function(discoveredTernminals){
+			log("6666666666666666");
                 document.getElementById("button").setAttribute("disabled","true");
                 terminals = discoveredTernminals;
                 terminals.forEach(function(terminal,i){
+				log("777777777777777777777");
                     document.getElementById("terminals").innerHTML +=
                             "<li id='"+i+"'>" + terminal.friendly_name +
                             "  <button class='launch' onclick='launchHbbTVApp("+i+")'>Launch</button> " +
