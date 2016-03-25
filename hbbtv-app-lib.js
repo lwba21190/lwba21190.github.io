@@ -31,15 +31,18 @@
         ws = new WebSocket(hbbtvCsManagerUrl);
         ws.onopen = function(evt){
             console.log("ws open");
+			document.getElementById("log").innerHTML += ("ws open" + "\n");
         };
         ws.onclose = function(evt){
             console.log("ws close");
+			document.getElementById("log").innerHTML += ("ws close" + "\n");
             if(this == ws){
                 ws = null;
             }
         };
         ws.onerror = function(evt){
             console.log("ws error");
+			document.getElementById("log").innerHTML += ("ws error" + "\n");
         };
         ws.onmessage = function(evt){
             try{
@@ -48,6 +51,7 @@
             }
             catch(err){
                 console.error("ws comunication error");
+				document.getElementById("log").innerHTML += ("ws comunication error" + "\n");
             }
         };
     };
