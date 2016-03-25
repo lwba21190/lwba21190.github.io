@@ -2,7 +2,7 @@
  * Created by liwenb on 2016/3/21.
  */
 (function(){
-	alert("h1111");
+
     var parseParameters = function(query){
         var dict = {};
         query = query.substr(query.lastIndexOf("#")+1);
@@ -25,7 +25,7 @@
         }
         return dict;
     };
-alert("h2222");
+
     var connect = function(){
         ws && ws.close();
         ws = new WebSocket(hbbtvCsManagerUrl);
@@ -51,7 +51,7 @@ alert("h2222");
             }
         };
     };
-alert("h3333");
+
     var sendRpcRequest = function(req,callback){
         if(!req.id){
             req.id = rpcCounter++;
@@ -82,14 +82,14 @@ alert("h3333");
             }
         }
     };
-alert("h4444");
+
     var hash = location.hash.substr(location.hash.lastIndexOf("#")+1);
     var hashParameters = parseParameters(hash);
     var port = hashParameters.port;
     var hostname = hashParameters.hostname;
     var app2AppLocalUrl = port && "ws://10.120.121.27:"+port+"/local/" || null;
     var app2AppRemoteUrl = port && hostname && "ws://"+hostname+":"+port+"/remote/" || null;
-    var hbbtvCsManagerUrl = "ws://10.120.120.29:"+3000;
+    var hbbtvCsManagerUrl = "ws://10.120.220.83:"+3000;
     var userAgent = navigator.userAgent;
     var appLaunchUrl = port && hostname && "http://"+hostname+":"+port+"/dial/apps/HbbTV" || null;
     var ws = null;
@@ -99,7 +99,7 @@ alert("h4444");
     var discoveredLaunchers = {};
     var terminalCounter = 1;
     var discoveredTerminals = {};
-alert("h5555");
+
 
     var DiscoveredTerminal = function(enum_id,friendly_name,x_HbbTV_App2AppURL,x_HbbTV_InterDevSyncURL,x_HbbTV_UserAgent){
         this.enum_id = enum_id;
@@ -109,7 +109,7 @@ alert("h5555");
         this.x_HbbTV_UserAgent = x_HbbTV_UserAgent;
 
     };
-alert("h6666");
+
     var DiscoveredCSLauncher = function(enum_id,friendly_name,CS_OS_id){
         this.enum_id = enum_id;
         this.friendly_name = friendly_name;
@@ -226,7 +226,7 @@ alert("h6666");
         this.discoverTerminals = discoverTerminals;
         this.launchHbbTVApp = launchHbbTVApp;
     };
-alert("h7777");
+
     if(port == "8080") {
 		alert("h8888");
         window.oipfObjectFactory = window.oipfObjectFactory || {};
@@ -234,16 +234,12 @@ alert("h7777");
                 return new HbbTVCSManager();
             };
         connect();
-		alert("h9999");
     }
     else if(port == "8090") {
-		alert("h1010");
         window.hbbtv = window.hbbtv || {};
         window.hbbtv.createTerminalManager = function(){
             return new HbbTVTerminalManager();
         };
-		alert("h1011");
         connect();
-		alert("h1012");
     }
 })();
