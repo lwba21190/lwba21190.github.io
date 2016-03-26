@@ -30,21 +30,21 @@
         ws && ws.close();
         ws = new WebSocket(hbbtvCsManagerUrl);
 		var resl = (ws == null);
-		alert("new ws success?:" + resl);
+		document.getElementById("log").innerHTML += ("new ws success>:" + resl + "\n");
         ws.onopen = function(evt){
             console.log("ws open");
-			alert("ws open");
+			document.getElementById("log").innerHTML += ("ws open" + "\n");
         };
         ws.onclose = function(evt){
             console.log("ws close");
-			alert("ws close");
+			document.getElementById("log").innerHTML += ("ws close" + "\n");
             if(this == ws){
                 ws = null;
             }
         };
         ws.onerror = function(evt){
             console.log("ws error");
-			alert("ws error");
+			document.getElementById("log").innerHTML += ("ws error" + "\n");
         };
         ws.onmessage = function(evt){
             try{
@@ -251,14 +251,12 @@
         connect();
     }
     else if(port == "8090") {
-		alert("port : 8090");
-alert("1111");
+		document.getElementById("log").innerHTML += ("port : 8090");
         window.hbbtv = window.hbbtv || {};
         window.hbbtv.createTerminalManager = function(){
-			alert("2222");
             return new HbbTVTerminalManager();
         };
-		alert("start connecting");
+		document.getElementById("log").innerHTML += ("start connecting" + "\n");
         connect();
     }
 })();
