@@ -252,8 +252,10 @@
     }
     else if(port == "8090") {
 		alert("port : 8090");
+alert("1111");
         window.hbbtv = window.hbbtv || {};
         window.hbbtv.createTerminalManager = function(){
+			alert("2222");
             return new HbbTVTerminalManager();
         };
 		alert("start connecting");
