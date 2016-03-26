@@ -252,7 +252,7 @@
         connect();
     }
     else if(port == "8090") {
-		document.getElementById("log").innerHTML += ("port : 8090");
+		document.getElementById("log").innerHTML += ("port : 8090" + "\n");
         window.hbbtv = window.hbbtv || {};
         window.hbbtv.createTerminalManager = function(){
             return new HbbTVTerminalManager();
