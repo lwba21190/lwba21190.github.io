@@ -29,6 +29,8 @@
     var connect = function(){
         ws && ws.close();
         ws = new WebSocket(hbbtvCsManagerUrl);
+		var resl = (ws == null);
+		document.getElementById("log").innerHTML += ("new ws success>:" + resl + "\n");
         ws.onopen = function(evt){
             console.log("ws open");
 			document.getElementById("log").innerHTML += ("ws open" + "\n");
@@ -249,10 +251,12 @@
         connect();
     }
     else if(port == "8090") {
+		document.getElementById("log").innerHTML += ("port : 8090" + "\n");
         window.hbbtv = window.hbbtv || {};
         window.hbbtv.createTerminalManager = function(){
             return new HbbTVTerminalManager();
         };
+		document.getElementById("log").innerHTML += ("start connecting" + "\n");
         connect();
     }
 })();
