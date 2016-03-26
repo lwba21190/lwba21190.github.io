@@ -31,6 +31,7 @@
         ws = new WebSocket(hbbtvCsManagerUrl);
 		var resl = (ws == null);
 		document.getElementById("log").innerHTML += ("new ws success>:" + resl + "\n");
+		document.getElementById("log").innerHTML += ("new ws success>:" + ws.toString() + "\n");
         ws.onopen = function(evt){
             console.log("ws open");
 			document.getElementById("log").innerHTML += ("ws open" + "\n");
