@@ -72,6 +72,7 @@
                 callback:callback
             };
 			document.getElementById("log").innerHTML += ("send req2" + "\n");
+			console.log("log start to see!");
             ws.send(JSON.stringify(req));
 			document.getElementById("log").innerHTML += ("send req3" + "\n");
             return true;
