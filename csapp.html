@@ -8,7 +8,7 @@
 <body style="height:96%" bgcolor="#6495ed">
     <h1>CS Web Application Test</h1>
     <div style="float:left;width:48%">
-        <button id="button" autofocus="autofocus">Discover HbbTV Terminals</button>
+        <div id="button" autofocus="autofocus">Discover HbbTV Terminals</div>
         <br/>
         <div id="info"></div>
         <br/>
@@ -75,11 +75,11 @@ log("44444444444444");
             document.getElementById("info").innerHTML = "Searching for HbbTV Terminals:  please wait ...";
 			
             terminals.length = 0;
-            document.getElementById("button").setAttribute("disabled","true");
+        //    document.getElementById("button").setAttribute("disabled","true");
 			log("5555555555555555");
             terminalManager.discoverTerminals(function(discoveredTernminals){
 			log("6666666666666666");
-                document.getElementById("button").setAttribute("disabled","true");
+        //        document.getElementById("button").setAttribute("disabled","true");
                 terminals = discoveredTernminals;
                 terminals.forEach(function(terminal,i){
 				log("777777777777777777777");
