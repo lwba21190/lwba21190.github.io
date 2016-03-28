@@ -63,7 +63,9 @@
         if(!req.id){
             req.id = rpcCounter++;
         }
+		
 		document.getElementById("log").innerHTML += ("send req1" + "\n");
+		
         if(callback && ws){
             pendingRpcRequests[req.id] = {
                 req:req,
