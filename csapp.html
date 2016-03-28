@@ -71,7 +71,8 @@
         var terminalManager = hbbtv && hbbtv.createTerminalManager();
         var terminals = [];
 log("44444444444444");
-        document.getElementById("button").onclick = function(){
+		setTimeout(function(){
+		//document.getElementById("button").onclick = function(){
             document.getElementById("info").innerHTML = "Searching for HbbTV Terminals:  please wait ...";
 			
             terminals.length = 0;
@@ -96,7 +97,9 @@ log("44444444444444");
                 }
                 log(terminals.length+" HbbTV terminals found");
             });
-        };
+      //  };
+		},2000);
+        
     </script>
 </body>
 </html>
