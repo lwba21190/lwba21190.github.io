@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;padding: 0;margin: 0">
+<head>
+    <meta charset="UTF-8">
+    <title>CS_APP</title>
+    <script type="text/javascript" src="lib/hbbtv-app-lib.js"></script>
+
+</head>
+<body style="height:96%" bgcolor="#6495ed">
+    <h1>CS Web Application Test</h1>
+    <div style="float:left;width:48%">
+        <button id="button">Discover HbbTV Terminals</button>
+        <br/>
+        <div id="info"></div>
+        <br/>
+        <ul id="terminals"></ul>
+    </div>
+    <div style="float:left;width:48%;height:90%" >
+        <textarea id="log" style="width:98%;height:98%" disabled="true"></textarea>
+    </div>
+
+    <script>
+        var log = function(msg) {
+            document.getElementById("log").innerHTML += (msg + "\n");
+        };
+
+        var parseParameters = function(query){
+            var dict = {};
+            if(query){
+                var params = query.split("&");
+                for (var i = 0; i < params.length; i++) {
+                    var index = params[i].indexOf("=");
+                    var key = index>-1?params[i].substr(0,index):params[i];
+                    var value = index>-1?params[i].substr(index+1):"";
+                    if(typeof dict[key] == "undefined"){
+                        dict[key] = value;
+                    }
+                    else if(typeof dict[key] == "string"){
+                        dict[key] = [dict[key],value];
+                    }
+                    else if(typeof dict[key] == "object"){
+                        dict[key].push(value);
+                    }
+                }
+            }
+            return dict;
+        };
+
+        var qualifyURL = function(url){
+            var a = document.createElement('a');
+            a.href = url;
+            return a.href;
+        };
+
+        var launchHbbTVApp = function(index){
+            var terminal = terminals[index];
+            var options = {
+                "appUrlBase": qualifyURL("terminalapp.html"),
+                "appLocation": "?channel="+channel
+            };
+            terminal && terminalManager.launchHbbTVApp(terminal.enum_id,options,function(res){
+                log("launch app result code "+ res);
+            });
+        };
+
+        var connect = function (index,app2appURL){
+            var terminal = terminals[index];
+            var app2appRemoteBaseUrl = terminal && terminal.x_HbbTV_App2AppURL || app2appURL;
+            var ws = new WebSocket(app2appRemoteBaseUrl + channel);
+            log("Connect to App2App Endpoint: "+ app2appRemoteBaseUrl + channel);
+            ws.binaryType = "arraybuffer";
+            ws.onopen = function(evt){
+                log("Connection waiting...");
+                ws.send("Hello Server");
+            };
+            ws.onclose = function(evt){
+                log("Connection closed");
+            };
+            ws.onerror = function(evt){
+                log("ws conmunication error");
+            };
+            ws.onmessage = function(evt){
+                if (evt.data == "pairingcompleted") {
+                    log("connection paired");
+                    ws.onmessage = function(evt) {
+                        log( "Received Message: " + evt.data);
+                    };
+                    var data = "Hello from Companion Screen";
+                    ws.send(data);
+                    var array = [0,1,2,3,4,5,6,7,8,9];
+                    data = typeof Buffer != "undefined"?new Buffer(array): new Int8Array(array).buffer;
+                    ws.send(data);
+                } else {
+                    log("Unexpected message received from terminal.");
+                    ws.close();
+                }
+            };
+
+        };
+
+        var searchParameters = parseParameters(location.search.substr(1));
+        var channel = searchParameters.channel || "org.mychannel.myapp";
+        var terminalManager = hbbtv && hbbtv.createTerminalManager();
+        var terminals = [];
+
+        document.getElementById("button").onclick = function(){
+            document.getElementById("info").innerHTML = "Searching for HbbTV Terminals:  please wait ...";
+            terminals.length = 0;
+            document.getElementById("button").setAttribute("disabled","true");
+            terminalManager.discoverTerminals(function(discoveredTernminals){
+                document.getElementById("button").setAttribute("disabled","true");
+                document.getElementById("info").value = "";
+                terminals = discoveredTernminals;
+                terminals.forEach(function(terminal,i){
+                    document.getElementById("terminals").innerHTML +=
+                            "<li id='"+i+"'>" + terminal.friendly_name +
+                            "  <button class='launch' onclick='launchHbbTVApp("+i+")'>Launch</button> " +
+                            "  <button class='connect' onclick='connect("+i+")'>Connect</button> " +
+                            "<div class='log'></div> " +
+                            "</li>"
+                    ;
+                });
+                if(terminals.length==0){
+                    document.getElementById("info").html("No HbbTV Terminals found. Click on the discover button to search again");
+                }
+                log(terminals.length+" HbbTV terminals found");
+            });
+        };
+    </script>
+</body>
+</html>

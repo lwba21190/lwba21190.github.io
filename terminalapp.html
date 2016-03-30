@@ -1,0 +1,122 @@
+<html style="height: 100%; padding: 0; margin: 0;">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Terminal App</title>
+    <script type="text/javascript" src="lib/hbbtv-app-lib.js"></script>
+</head>
+<body style="height: 96%; ">
+    <h3>Application</h3>
+    <div style="float:left;width:48%">
+        <button id="button">Discover CS Launchers</button>
+        <br/>
+        <div id="info"></div>
+        <br/>
+        <ul id="csLaunchers"></ul>
+    </div>
+    <div style="float:left;width:48%;height:90%" >
+        <textarea id="log" style="width:98%;height:98%" disabled="true"></textarea>
+    </div>
+
+    <script type="text/javascript">
+        var log = function(msg) {
+            document.getElementById("log").innerHTML += (msg + "\n");
+        };
+        var parseParameters = function(query){
+            var dict = {};
+            if(query){
+                var params = query.split("&");
+                for (var i = 0; i < params.length; i++) {
+                    var index = params[i].indexOf("=");
+                    var key = index>-1?params[i].substr(0,index):params[i];
+                    var value = index>-1?params[i].substr(index+1):"";
+                    if(typeof dict[key] == "undefined"){
+                        dict[key] = value;
+                    }
+                    else if(typeof dict[key] == "string"){
+                        dict[key] = [dict[key],value];
+                    }
+                    else if(typeof dict[key] == "object"){
+                        dict[key].push(value);
+                    }
+                }
+            }
+            return dict;
+        };
+
+        var qualifyURL = function(url){
+            var a = document.createElement('a');
+            a.href = url;
+            return a.href;
+        };
+
+        var launchCsApp = function (enumId) {
+            var payload = JSON.stringify({
+                "launch": [
+                    {"launchUrl": qualifyURL("csapp.html")+"?app2appURL="+csManager.getApp2AppRemoteBaseURL(), "appType": "html"}
+                ]
+            });
+            csManager.launchCSApp(enumId, payload, function (res) {
+                log("launch app result code "+ res);
+            });
+        };
+        var csManager = oipfObjectFactory.createCSManager();
+        var app2appLocalBaseUrl = csManager.getApp2AppLocalBaseURL();
+        var searchParameters = parseParameters(location.search.substr(1));
+        var channel = searchParameters.channel || "org.mychannel.myapp";
+        var createConnection = function (index) {
+            var ws = new WebSocket(app2appLocalBaseUrl + channel);
+            ws.binaryType = "arraybuffer";
+            ws.onopen = function(evt) {
+                log("Connection "+index+" waiting ...");
+            };
+            ws.onclose = function(evt) {
+                log("Connection "+index+" closed.");
+            };
+            ws.onerror = function (evt) {
+                log("Connection error.");
+            };
+            ws.onmessage = function(evt) {
+                if (evt.data == "pairingcompleted") {
+                    log("connection "+index+" paired");
+                    ws.onmessage = function(evt) {
+                        if(typeof evt.data == "string"){
+                            log( "Received Message: " + evt.data);
+                        }
+                        else {
+                            var data = new Int8Array(evt.data);
+                            log("Received Binary Message of " + data.length + " bytes: " + data.join());
+                        }
+                    };
+                    ws.send("Hello from HbbTV App: "+index);
+                    createConnection(index+1);
+                } else {
+                    log("Unexpected message received from terminal.");
+                    ws.close();
+                }
+            };
+        };
+        createConnection(0);
+        var csLaunchers = [];
+        document.getElementById("button").onclick = function () {
+            document.getElementById("info").innerHTML = "Searching for cs launchers:  please wait ...";
+            csLaunchers.length = 0;
+            document.getElementById("button").setAttribute("disabled","true");
+            csManager.discoverCSLaunchers(function (discovercsLaunchers) {
+                document.getElementById("button").setAttribute("disabled","false");
+                document.getElementById("info").value = "";
+                csLaunchers = discovercsLaunchers;
+                csLaunchers.forEach(function(csLauncher,i){
+                    document.getElementById("csLaunchers").innerHTML +=
+                            "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
+                            "  <button onclick='launchCsApp("+csLauncher.enum_id+")'>Launch</button>" +
+                            "</li>";
+                });
+                if(csLaunchers.length==0){
+                    document.getElementById("info").innerHTML = "No cs launchers found. Click on the discover button to search again";
+                }
+                log(csLaunchers.length+" cs launchers found");
+            });
+        };
+    </script>
+</body>
+</html>
