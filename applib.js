@@ -105,7 +105,7 @@
     var hostname = hashParameters.hostname;
     var app2AppLocalUrl = port && "ws://10.120.121.27:"+port+"/local/" || null;
     var app2AppRemoteUrl = port && hostname && "ws://"+hostname+":"+port+"/remote/" || null;
-    var hbbtvCsManagerUrl = "ws://192.168.88.150:"+8080;
+    var hbbtvCsManagerUrl = "ws://192.168.2.100:"+8080;
     var userAgent = navigator.userAgent;
     var appLaunchUrl = port && hostname && "http://"+hostname+":"+port+"/dial/apps/HbbTV" || null;
     var ws = null;
