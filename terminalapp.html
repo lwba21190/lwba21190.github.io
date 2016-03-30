@@ -7,7 +7,7 @@
 <body style="height: 96%" bgcolor="#6495ed">
     <h3>Application</h3>
     <div style="float:left;width:48%">
-        <button id="button" tabindex=0>Discover CS Launchers</button>
+        <button id="button0" >Discover CS Launchers</button>
         <br/>
         <div id="info"></div>
         <br/>
@@ -18,9 +18,41 @@
     </div>
 
     <script type="text/javascript">
-        var log = function(msg) {
+		var buttonId = 1;
+		var buttoncount = 0;
+		var log = function(msg) {
             document.getElementById("log").innerHTML += (msg + "\n");
         };
+		
+		document.onkeydown = keyProcess;
+		function keyProcess(evt)
+		{
+			var keyCode = evt.which;
+			log(keyCode);
+			switch(keyCode)
+			{
+				case 38://up
+					if(buttoncount > 0){
+						buttoncount--;
+					}
+					break;
+
+				case 40:// down
+					if(buttoncount < buttonId){
+						buttoncount++;
+					}
+					break;
+
+				case 13://ok
+					{
+						document.getElementById("button"+buttonId).click();
+					}
+				
+				default:break;
+			}
+			
+		}
+
         var parseParameters = function(query){
             var dict = {};
             if(query){
@@ -109,8 +141,10 @@
                 csLaunchers.forEach(function(csLauncher,i){
                     document.getElementById("csLaunchers").innerHTML +=
                             "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
-                            "  <button tabindex=0 onclick='launchCsApp("+csLauncher.enum_id+")'>Launch</button>" +
+                            "  <button id=button"+buttonId+" onclick='launchCsApp("+csLauncher.enum_id+")'>Launch</button>" +
                             "</li>";
+					buttonId++;
+					
                 });
                 if(csLaunchers.length==0){
                     document.getElementById("info").innerHTML = "No cs launchers found. Click on the discover button to search again";
