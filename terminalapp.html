@@ -18,7 +18,7 @@
     </div>
 
     <script type="text/javascript">
-		var buttonId = 1;
+		var buttonId = 0;
 		var buttoncount = 0;
 		var log = function(msg) {
             document.getElementById("log").innerHTML += (msg + "\n");
@@ -139,12 +139,11 @@
                 document.getElementById("info").value = "";
                 csLaunchers = discovercsLaunchers;
                 csLaunchers.forEach(function(csLauncher,i){
+					buttonId++;
                     document.getElementById("csLaunchers").innerHTML +=
                             "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
                             "  <button id=button"+buttonId+" onclick='launchCsApp("+csLauncher.enum_id+")'>Launch</button>" +
                             "</li>";
-					buttonId++;
-					
                 });
                 if(csLaunchers.length==0){
                     document.getElementById("info").innerHTML = "No cs launchers found. Click on the discover button to search again";
