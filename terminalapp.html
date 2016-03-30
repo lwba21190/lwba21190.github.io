@@ -97,8 +97,9 @@
         };
         createConnection(0);
         var csLaunchers = [];
-        document.getElementById("button").onclick = function () {
-            document.getElementById("info").innerHTML = "Searching for cs launchers:  please wait ...";
+       // document.getElementById("button").onclick = function () {
+        setTimeout(function(){
+		 document.getElementById("info").innerHTML = "Searching for cs launchers:  please wait ...";
             csLaunchers.length = 0;
             document.getElementById("button").setAttribute("disabled","true");
             csManager.discoverCSLaunchers(function (discovercsLaunchers) {
@@ -116,7 +117,8 @@
                 }
                 log(csLaunchers.length+" cs launchers found");
             });
-        };
+		},5000);   
+      //  };
     </script>
 </body>
 </html>
