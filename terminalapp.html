@@ -107,7 +107,6 @@
                 document.getElementById("info").value = "";
                 csLaunchers = discovercsLaunchers;
                 csLaunchers.forEach(function(csLauncher,i){
-					buttonId++; 
                     document.getElementById("csLaunchers").innerHTML +=
                             "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
                             "  <button onclick='launchCsApp("+csLauncher.enum_id+")'>Launch</button>" +
