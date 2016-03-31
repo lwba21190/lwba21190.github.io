@@ -20,6 +20,9 @@
     <script type="text/javascript">
 		var buttonId = 0;
 		var buttoncount = 0;
+		window.onload = function(){
+			document.getElementById("button0").focus();
+		}
 		var log = function(msg) {
             document.getElementById("log").innerHTML += (msg + "\n");
         };
@@ -138,7 +141,7 @@
                 document.getElementById("info").value = "";
                 csLaunchers = discovercsLaunchers;
                 csLaunchers.forEach(function(csLauncher,i){
-					buttonId++;
+					buttonId++; 
                     document.getElementById("csLaunchers").innerHTML +=
                             "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
                             "  <button id=button"+buttonId+" onclick='launchCsApp("+csLauncher.enum_id+")'>Launch</button>" +
