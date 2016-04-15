@@ -2,31 +2,53 @@ var util = require("../node_modules/util");
 var ws = require("../node_modules/ws");
 var events = require("../node_modules/events");
 var CsLauncherDialClient = require("./cslauncher-dial-client.js");
+var HbbTVDialClient = require("./terminal-dial-client.js");
 
-var HbbTVCSManager = function(httpServer){	
-	var csLauncherDialClient = new CsLauncherDialClient();
+var HbbTVCSManager = function(httpServer,isSlave){
+	var isSlave = (isSlave == true);
 	var wsServer = null;
 	var csLaunchers = {};
+	var csTerminals = {};
 	var csLaunchersInfo = {};
+	var terminalsInfo = {};
 	var self = this
 	
-	csLauncherDialClient.on("ready",function(){
-		console.log("cs Launcher client ready");
-	}).on("found",function(csLauncher){
-		csLaunchers[csLauncher.getAppLaunchURL()] = csLauncher;
-        csLaunchersInfo[csLauncher.getAppLaunchURL()] = csLauncher.getInfo();
-	}).on("disappear",function(deviceDescriptionUrl){
-		delete csLaunchers[deviceDescriptionUrl];
-        delete csLaunchersInfo[deviceDescriptionUrl];
-	}).on("stop",function(){
-		self.emit("stop");
-	}).on("error",function(err){
-		self.emit("error",err);
-	});
+	if(isSlave)
+	{
+		var hbbTVDialClient = new HbbTVDialClient();
+		hbbTVDialClient.on("ready",function(){
+			self.emit("ready");
+		}).on("found",function(terminal){
+			terminals[terminal.getAppLaunchURL()] = terminal;
+			terminalsInfo[terminal.getAppLaunchURL()] = terminal.getInfo();
+		}).on("disappear", function(deviceDescriptionUrl, terminal){
+			delete terminals[deviceDescriptionUrl];
+			delete terminalsInfo[deviceDescriptionUrl];
+		}).on("stop", function(){
+			self.emit("stop");
+		}).on("error", function (err) {
+			self.emit("error",err);
+		});
+	}
+	else{
+		var csLauncherDialClient = new CsLauncherDialClient();
+		csLauncherDialClient.on("ready",function(){
+			console.log("cs Launcher client ready");
+		}).on("found",function(csLauncher){
+			csLaunchers[csLauncher.getAppLaunchURL()] = csLauncher;
+			csLaunchersInfo[csLauncher.getAppLaunchURL()] = csLauncher.getInfo();
+		}).on("disappear",function(deviceDescriptionUrl){
+			delete csLaunchers[deviceDescriptionUrl];
+			delete csLaunchersInfo[deviceDescriptionUrl];
+		}).on("stop",function(){
+			self.emit("stop");
+		}).on("error",function(err){
+			self.emit("error",err);
+		});
+	}
 	
 	var handleReceivedConnectionFromApp = function(connection) {
         connection.on("message", function(msg, flags) {
-            // expect msg as jsonrpc request
             if(typeof msg == "string"){
                 try{
                     var req = JSON.parse(msg);
@@ -51,8 +73,6 @@ var HbbTVCSManager = function(httpServer){
     };
 	
 	function discoverCSLaunchers(connection,req){
-		//csLauncherDialClient.state == "stop" ? csLauncherDialClient.start(): csLauncherDialClient.refresh();
-		
 		csLauncherDialClient.refresh();
 		var rsp = {
 			"jsonrpc": "2.0",
@@ -63,13 +83,13 @@ var HbbTVCSManager = function(httpServer){
 	}
 	
 	function discoverTerminals(connection,req){
-		// terminalDialClient.refresh();
-		// var rsp = {
-			// "jsonrpc": "2.0",
-			// "result": terminalInfo,
-			// "id": req.id
-		// };
-		// connection.send(JSON.stringify(rsp));
+		terminalDialClient.refresh();
+		var rsp = {
+			"jsonrpc": "2.0",
+			"result": terminalsInfo,
+			"id": req.id
+		};
+		connection.send(JSON.stringify(rsp));
 	}
 	
 	function launchCSApp(connection,req){
@@ -108,7 +128,8 @@ var HbbTVCSManager = function(httpServer){
 	
 	
 	this.start = function(){
-		csLauncherDialClient.start();
+		isSlave && hbbTVDialClient.start();
+		!isSlave && csLauncherDialClient.start();
 		wsServer = new WebSocketServer({
             server: httpServer,
             verifyClient : verifyClient
@@ -118,7 +139,8 @@ var HbbTVCSManager = function(httpServer){
 	};
 	
 	this.stop = function () {
-        csLauncherDialClient.stop();
+		isSlave && hbbTVDialClient.stop();
+        !isSlave && csLauncherDialClient.stop();
         wsServer.close();
         return this;
     };
