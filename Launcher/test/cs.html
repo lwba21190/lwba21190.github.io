@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+	<head lang="en">
+		<meta charset="UTF-8" />
+		<title>CS App</title>
+		<style>
+			#sendbtn,#closebtn{
+				width:100px;
+				heigth:50px;
+				font-size:25px
+			}
+		</style>
+	</head>
+	
+	<body>
+		<div style="float:left; width:50%; heigth:%100;">
+			<h1>HbbTV CS Application</h1>
+			<div>
+				<input type="button" id="discoverbtn" value="DiscoverTerminals" onclick="discoverTerminalDevices();"/>
+			</div>
+			<br />
+			<div id="prompt"></div>
+			<br />
+			<div id = terminals></div>
+			<br />
+			<div style="position:absolute;top:600px">
+				<div>Console:</div>
+				<textarea id="log" rows="20" cols="100" disabled="true"></textarea>
+			</div>
+		</div>
+		<div style="float:left; width:50%; heigth:%100;">
+			<div style="position:absolute; top:150px;">
+				<div>通讯区：</div>
+				<div><textarea id="displayarea" rows="30" cols = "100"  disabled="true"></textarea></div>
+				<div><textarea id="sendarea" rows="10" cols = "100" ></textarea></div>
+			</div>
+			<div style="position:absolute; top:800px;">
+				<input type="button" id="sendbtn" name="sendinfo" value="send" onclick="sendInfo();"/>
+				<input type="button" id="closebtn" name="closeconnect" value="close" onclick="closeConnect();"/>
+			</div>
+		</div>
+		<script type="text/javascript">
+			function log(msg){
+				document.getElementById("log").innerHTML += (msg + "\r\n");
+			}
+			
+			function getCurrentTime(){
+				var date = new Date();
+				var second = date.getSeconds();
+				(second < 10) ? second = ("0" + second) : second;
+				var minute = date.getMinutes();
+				(minute < 10) ? minute = ("0" + minute) : minute;
+				var hour = date.getHours();
+				return (hour + ":" + minute + ":" + second);
+			}
+			
+			var channel = "org.mychannel.myapp";
+			var connect = function (index){
+				//var terminal = terminals[index];
+				var app2appRemoteBaseUrl = "ws://192.168.1.108:8080/remote/";//terminal && terminal.x_HbbTV_App2AppURL;
+				ws = new WebSocket(app2appRemoteBaseUrl + channel);
+				log("Connect to App2App Endpoint: "+ app2appRemoteBaseUrl + channel);
+				ws.binaryType = "arraybuffer";
+				ws.onopen = function(evt){
+					log("Connection open");
+				};
+				ws.onclose = function(evt){
+					log("Connection closed");
+				};
+				ws.onerror = function(evt){
+					log("ws conmunication error");
+				};
+				ws.onmessage = function(evt){
+					if (evt.data == "pairingcompleted") {
+						log("connection paired");
+						ws.onmessage = function(evt) {
+							document.getElementById("displayarea").innerHTML += ("Terminal " + getCurrentTime() + "\r\n" + "  " + evt.data + "\r\n");
+						};
+						
+					} else {
+						log("Unexpected message received from terminal.");
+						ws.close();
+					}
+				};
+
+			};
+			
+			function sendInfo(){
+				var message = document.getElementById("sendarea").value;
+				message && ws.send(message);
+				document.getElementById("displayarea").innerHTML += ("CS " + getCurrentTime() + "\r\n" + "  " + message + "\r\n");
+				document.getElementById("sendarea").value = "";
+			}
+			
+			function closeConnect(){
+				ws.close();
+			}
+			
+			connect(0);
+			
+			function discoverTerminalDevices(){
+				document.getElementById("discoverbtn").setAttribute("disabled","true");
+				document.getElementById("prompt").innerHTML = "Searching for terminals ...";
+ 				csManager.discoverCSLaunchers(function(csLaunchers){
+					document.getElementById("discoverbtn").setAttribute("disabled", false);
+					document.getElementById("prompt").innerHTML = "";
+					csLaunchers.forEach(function(terminal,i){
+						document.getElementById("terminals").innerHTML +=
+							"<li id='"+i+"'>" + terminal.friendly_name +
+							"  <button class='launch' onclick='launchHbbTVApp("+i+")'>Launch</button> " +
+							"  <button class='connect' onclick='connect("+i+")'>Connect</button> " +
+							"<div class='log'></div> " +
+							"</li>"
+						;
+					});
+					if(csLaunchers.length==0){
+						document.getElementById("prompt").innerHTML =("No cs launchers found. Click on the discover button to search again");
+					}
+					log(csLaunchers.length+" cs launchers found");
+				});	
+			}
+		</script>
+	</body>
+</html>

@@ -1,0 +1,19 @@
+{
+	"name" : "launcher",
+	"version": "0.0.1",
+	"main": "index",
+	"dependencies" : {
+		"peer-dial": "0.0.6",
+		"ejs": "1.0.0",
+		"node-uuid": "1.4.1",
+		"ws": "0.7.2",
+        "express": "4.12.4",
+        "opn": "2.0.0",
+	  	"xml2js": "0.4.9",
+	  	"xmlbuilder": "2.6.4",
+        "commander": "2.8.1"
+	},
+	"bin": {
+      "launcher": "bin/index.js"
+    }
+}
