@@ -29,16 +29,15 @@
 			</div>
 		</div>
 		<div style="float:left; width:50%; heigth:%100;">
-			<div style="position:absolute; top:150px;">
+			<div style="position:absolute; top:100px;">
 				<div>Communication Area：</div>
 				<div><textarea id="displayarea" rows="20" cols = "80"   style="resize:none;" disabled="true"></textarea></div>
 				<div><textarea id="sendarea" rows="5" cols = "80" style="resize:none;"></textarea></div>
+				<div style="position:absolute; top:800px;">
+					<input type="button" id="sendbtn" name="sendinfo" value="send" onclick="sendInfo();"/>
+					<input type="button" id="closebtn" name="closeconnect" value="close" onclick="closeConnect();"/>
+				</div>
 			</div>
-			<div style="position:absolute; top:800px;">
-				<input type="button" id="sendbtn" name="sendinfo" value="send" onclick="sendInfo();"/>
-				<input type="button" id="closebtn" name="closeconnect" value="close" onclick="closeConnect();"/>
-			</div>
-
 		</div>
 		<script >
 			function log(msg){
