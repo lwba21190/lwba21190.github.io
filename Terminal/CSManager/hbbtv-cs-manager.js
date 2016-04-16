@@ -83,7 +83,7 @@ var HbbTVCSManager = function(httpServer,isSlave){
 	}
 	
 	function discoverTerminals(connection,req){
-		terminalDialClient.refresh();
+		hbbTVDialClient.refresh();
 		var rsp = {
 			"jsonrpc": "2.0",
 			"result": terminalsInfo,
