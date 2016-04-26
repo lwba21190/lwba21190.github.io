@@ -119,7 +119,7 @@
 
 	function connectAppToCSManager(){
 		ws && ws.close();
-		ws = new WebSocket("ws://10.0.3.14:8080/hbbtvmanager");
+		ws = new WebSocket("ws://192.168.1.100:8080/hbbtvmanager");
 		
 		ws.onopen = function(evt){
 			console.log("ws open");
