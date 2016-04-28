@@ -5,8 +5,8 @@
 		<title>CS App</title>
 		<style>
 			#sendbtn,#closebtn{
-				width:5%;
-				heigth:5%;
+				width:100px;
+				heigth:50px;
 				font-size:25px
 			}
 		</style>
@@ -23,18 +23,18 @@
 			<br />
 			<div id = terminals></div>
 			<br />
-			<div style="position:absolute;top:60%">
+			<div style="position:absolute;top:600px">
 				<div>Console:</div>
 				<textarea id="log" rows="20" cols="100" disabled="true"></textarea>
 			</div>
 		</div>
 		<div style="float:left; width:50%; heigth:%100;">
-			<div style="position:absolute; top:15%;">
+			<div style="position:absolute; top:150px;">
 				<div>通讯区：</div>
 				<div><textarea id="displayarea" rows="30" cols = "100"  disabled="true"></textarea></div>
 				<div><textarea id="sendarea" rows="10" cols = "100" ></textarea></div>
 			</div>
-			<div style="position:absolute; top:80%;">
+			<div style="position:absolute; top:800px;">
 				<input type="button" id="sendbtn" name="sendinfo" value="send" onclick="sendInfo();"/>
 				<input type="button" id="closebtn" name="closeconnect" value="close" onclick="closeConnect();"/>
 			</div>
