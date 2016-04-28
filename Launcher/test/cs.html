@@ -80,6 +80,7 @@
 			var app2appRemoteBaseUrl = searchParameters.apptoapp_url;
 			var channel = searchParameters.channel || "org.mychannel.myapp";
 			var connect = function (){
+			log("1111111");
 				ws = new WebSocket(app2appRemoteBaseUrl + channel);
 				log("Connect to App2App Endpoint: "+ app2appRemoteBaseUrl + channel);
 				ws.binaryType = "arraybuffer";
