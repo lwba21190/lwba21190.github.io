@@ -40,11 +40,10 @@
 			</div>
 		</div>
 		<script type="text/javascript">
-		alert("lwb");
 			function log(msg){
 				document.getElementById("log").innerHTML += (msg + "\r\n");
 			}
-			log("33333333");
+			
 			function getCurrentTime(){
 				var date = new Date();
 				var second = date.getSeconds();
@@ -54,7 +53,7 @@
 				var hour = date.getHours();
 				return (hour + ":" + minute + ":" + second);
 			}
-			log("444444444");
+			
 			var parseParameters = function(query){
 				var dict = {};
 				if(query){
@@ -76,12 +75,11 @@
 				}
 				return dict;
 			};
-			log("2222222");
+			
 			var searchParameters = parseParameters(location.search.substr(1));
 			var app2appRemoteBaseUrl = searchParameters.apptoapp_url;
 			var channel = searchParameters.channel || "org.mychannel.myapp";
 			var connect = function (){
-			log("1111111");
 				ws = new WebSocket(app2appRemoteBaseUrl + channel);
 				log("Connect to App2App Endpoint: "+ app2appRemoteBaseUrl + channel);
 				ws.binaryType = "arraybuffer";
