@@ -1,0 +1,57 @@
+<DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>CS App</title>
+	<script type="text/javascript" src="hbbtv-mediasync-plugin.js"></script>
+</head>
+<body style="position:absolute">
+	<input id="connect" type="button" onclick="connect();" value="connect" style="float:left;width:auto;height:auto">
+	<input id="initSyncBtn" type="button" onclick="init();" value="Init Sync" style="float:left;margin-left:5%;float:left;width:auto;height:auto">
+	<input id="enableSyncBtn" type="button" onclick="enable();" value="Enable Sync" style="float:left;margin-left:5%;width:auto;height:auto">
+	<input id="disableSyncBtn" type="button" onclick="disable();" value="Disable Sync" style="float:left;margin-left:5%;width:auto;height:auto">
+	<input id="runBtn" type="button" onclick="run();" value="run" style="float:left;margin-left:5%;width:auto;height:auto">
+	</br>
+	</br>
+	<textarea id="log" disabled="true" rows="50" cols="100" style="float:left;margin-left:20%;resize:none;"></textarea>
+	<script>
+	
+		function log(msg){
+			document.getElementById("log").innerHTML += (msg+"\r\n");
+		}
+
+		var mediaSyncManager = oipfObjectFactory.createMediaSynchroniser();
+
+		function connect(){
+			mediaSyncManager.connect("ws://192.168.1.102:9091");
+			log("connecting");
+		}
+		
+		function init(){
+			log("init media sync......");
+			mediaSyncManager.initSlaveMediaSynchroniser();
+			log("init media sync finished");
+		}
+		
+		function enable(){
+			log("enbale media sync......");
+			mediaSyncManager.enableInterDeviceSync(function(result){
+				log("enable sync result: " + result);
+			});
+		}
+		
+		function disable(){
+			log("disable media sync......");
+			mediaSyncManager.disableInterDeviceSync(function(){
+				log("disable sync result: " + result);
+			});
+		}
+
+		function run(){
+			connect();
+			init();
+			enable();
+		}
+	</script>
+</body>
+</html>
