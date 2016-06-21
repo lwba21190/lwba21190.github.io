@@ -49,8 +49,10 @@
 
 		function run(){
 			connect();
-			init();
-			enable();
+			setTimeout(function(){
+					init();
+				enable();
+			},200);
 		}
 	</script>
 </body>
