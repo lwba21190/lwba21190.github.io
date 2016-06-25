@@ -120,7 +120,7 @@ var HbbTVDialClient = function () {
                     if(appInfo){
                         var terminal = new HbbTVTerminal(dialDevice, appInfo);
                         terminals[deviceDescriptionUrl] = terminal;
-                        self.emit("found", terminal);
+                        self.emit("found", terminal,deviceDescriptionUrl);
                     }
                     else if(err){
                     }

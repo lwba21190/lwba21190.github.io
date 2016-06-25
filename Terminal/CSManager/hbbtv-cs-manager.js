@@ -11,9 +11,6 @@ var HbbTVCSManager = function(httpServer,isSlave){
 	var terminals = {};
 	var csLaunchersInfo = {};
 	var terminalsInfo = {};
-	var lastCsLauncherRefresh = 0;
-    var lastHbbTVTerminalRefresh = 0;
-    var discoveryTime = 3000;
 	var self = this
 	
 	if(isSlave)
@@ -21,9 +18,9 @@ var HbbTVCSManager = function(httpServer,isSlave){
 		var hbbTVDialClient = new HbbTVDialClient();
 		hbbTVDialClient.on("ready",function(){
 			self.emit("ready");
-		}).on("found",function(terminal){
-			terminals[terminal.getAppLaunchURL()] = terminal;
-			terminalsInfo[terminal.getAppLaunchURL()] = terminal.getInfo();
+		}).on("found",function(terminal,deviceDescriptionUrl){
+			terminals[deviceDescriptionUrl] = terminal;
+			terminalsInfo[deviceDescriptionUrl] = terminal.getInfo();
 		}).on("disappear", function(deviceDescriptionUrl, terminal){
 			delete terminals[deviceDescriptionUrl];
 			delete terminalsInfo[deviceDescriptionUrl];
@@ -76,18 +73,8 @@ var HbbTVCSManager = function(httpServer,isSlave){
     };
 	
 	function discoverCSLaunchers(connection,req){
-		var currentTime = new Date().getTime();
-        var timeElapsed = currentTime - lastCsLauncherRefresh;
-        var timeout = 0;
-        if(timeElapsed > discoveryTime){
-            lastCsLauncherRefresh = currentTime;
-            tmpCsLaunchers = {};
-			csLauncherDialClient.refresh();
-            timeout = discoveryTime;
-        }
-        else {
-            timeout = discoveryTime-timeElapsed;
-        }
+		csLaunchersInfo = {};
+		csLauncherDialClient.refresh();
 		setTimeout(function(){
 			var rsp = {
 				"jsonrpc": "2.0",
@@ -95,23 +82,13 @@ var HbbTVCSManager = function(httpServer,isSlave){
 				"id": req.id
 			};
 			connection.send(JSON.stringify(rsp));
-		},timeout);
+		},3000);
 
 	}
 	
 	function discoverTerminals(connection,req){
-        var currentTime = new Date().getTime();
-        var timeElapsed = currentTime - lastHbbTVTerminalRefresh;
-        var timeout = 0;
-        if(timeElapsed > discoveryTime){
-            lastHbbTVTerminalRefresh = currentTime;
-            tmpTerminals = {};
-			hbbTVDialClient.refresh();
-            timeout = discoveryTime;
-        }
-        else {
-            timeout = discoveryTime-timeElapsed;
-        }
+		terminalsInfo = {};
+		hbbTVDialClient.refresh();
 		setTimeout(function(){
 			var rsp = {
 				"jsonrpc": "2.0",
