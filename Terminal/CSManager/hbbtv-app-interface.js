@@ -7,9 +7,9 @@
 	var terminalCounter = 1;
 	var discoveredCSLaunchers = {};
 	var discoveredTerminals = {};
-	var app2AppLocalUrl = "ws://192.168.1.100:8080/local/";
+	var app2AppLocalUrl = "ws://192.168.1.102:8080/local/";
     var app2AppRemoteUrl = null;
-	var appLaunchUrl = "http://192.168.1.101:8090/dial/apps/TCL";
+	var appLaunchUrl = "http://192.168.1.104:8090/dial/apps/TCL";
 	var interDevSyncURL = null;
 
     var DiscoveredTerminal = function(enum_id,friendly_name,X_HbbTV_App2AppURL,X_HbbTV_InterDevSyncURL,X_HbbTV_UserAgent){
@@ -119,7 +119,7 @@
 
 	function connectAppToCSManager(){
 		ws && ws.close();
-		ws = new WebSocket("ws://192.168.1.100:8080/hbbtvmanager");
+		ws = new WebSocket("ws://192.168.1.102:8080/hbbtvmanager");
 		
 		ws.onopen = function(evt){
 			console.log("ws open");
