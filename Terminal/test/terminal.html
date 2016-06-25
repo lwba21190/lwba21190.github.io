@@ -110,10 +110,10 @@
 			connect();
 		
 			function discoverCSDevices(){
-				document.getElementById("discoverbtn").setAttribute("disabled","true");
+				document.getElementById("discoverbtn").disable=true;
 				document.getElementById("prompt").innerHTML = "Searching for cs launchers ...";
  				csManager.discoverCSLaunchers(function(csLaunchers){
-					document.getElementById("discoverbtn").setAttribute("disabled", false);
+					document.getElementById("discoverbtn").disable=false;
 					document.getElementById("prompt").innerHTML = "";
 					csLaunchers.forEach(function(csLauncher,i){
 						document.getElementById("csLaunchers").innerHTML +=
@@ -121,7 +121,6 @@
                             "  <input type=button onclick='launchCSApp("+csLauncher.enum_id+");' value = Launch />" +
                             "</li>";
 					});
-					document.getElementById("discoverbtn").setAttribute("disabled","false");
 					if(csLaunchers.length==0){
 						document.getElementById("prompt").innerHTML =("No cs launchers found. Click on the discover button to search again");
 					}
