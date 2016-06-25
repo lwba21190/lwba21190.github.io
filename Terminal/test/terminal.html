@@ -121,6 +121,7 @@
                             "  <input type=button onclick='launchCSApp("+csLauncher.enum_id+");' value = Launch />" +
                             "</li>";
 					});
+					document.getElementById("discoverbtn").setAttribute("disabled","false");
 					if(csLaunchers.length==0){
 						document.getElementById("prompt").innerHTML =("No cs launchers found. Click on the discover button to search again");
 					}
