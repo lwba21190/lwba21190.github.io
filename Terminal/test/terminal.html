@@ -122,6 +122,7 @@
                             "</li>";
 					});
 					if(csLaunchers.length==0){
+						document.getElementById("csLaunchers").innerHTML = "";
 						document.getElementById("prompt").innerHTML =("No cs launchers found. Click on the discover button to search again");
 					}
 					log(csLaunchers.length+" cs launchers found");
