@@ -116,7 +116,7 @@
 					document.getElementById("discoverbtn").disable=false;
 					document.getElementById("prompt").innerHTML = "";
 					csLaunchers.forEach(function(csLauncher,i){
-						document.getElementById("csLaunchers").innerHTML +=
+						document.getElementById("csLaunchers").innerHTML =
                             "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
                             "  <input type=button onclick='launchCSApp("+csLauncher.enum_id+");' value = Launch />" +
                             "</li>";
