@@ -115,14 +115,14 @@
  				csManager.discoverCSLaunchers(function(csLaunchers){
 					document.getElementById("discoverbtn").disabled=false;
 					document.getElementById("prompt").innerHTML = "";
+					document.getElementById("csLaunchers").innerHTML = "";
 					csLaunchers.forEach(function(csLauncher,i){
-						document.getElementById("csLaunchers").innerHTML =
+						document.getElementById("csLaunchers").innerHTML +=
                             "<li id='"+csLauncher.enum_id+"'>"+csLauncher.friendly_name+
                             "  <input type=button onclick='launchCSApp("+csLauncher.enum_id+");' value = Launch />" +
                             "</li>";
 					});
 					if(csLaunchers.length==0){
-						document.getElementById("csLaunchers").innerHTML = "";
 						document.getElementById("prompt").innerHTML =("No cs launchers found. Click on the discover button to search again");
 					}
 					log(csLaunchers.length+" cs launchers found");
